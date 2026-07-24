@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: noteflow
+      POSTGRES_USER: noteflow
+      POSTGRES_PASSWORD: noteflow
+    ports:
+      - "5432:5432"
+    volumes:
+      - noteflow_pg_data:/var/lib/postgresql/data
+
+volumes:
+  noteflow_pg_data:

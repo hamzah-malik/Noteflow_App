@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* Signal-blue accent - AirDrop/Apple-coded, deliberately distinct from
+     UniNotes' ink-green. Single rounded-geometric sans for everything
+     (headlines and body) rather than mixing a serif in. */
+  --color-paper: #FAFAFA;
+  --color-surface: #F2F3F5;
+  --color-ink-900: #131417;
+  --color-ink-700: #3C3E45;
+  --color-ink-500: #6E7178;
+  --color-ink-300: #C2C4CA;
+  --color-line: #E5E6EA;
+
+  --color-night-900: #0A0B0D;
+  --color-night-800: #16171B;
+  --color-night-700: #1E2024;
+  --color-night-line: #2A2C31;
+
+  --color-accent-50: #EEF3EA;
+  --color-accent-200: #B9CDA9;
+  --color-accent-500: #4C6B3A;
+  --color-accent-600: #3B5430;
+  --color-accent-dark: #87A96B;
+
+  /* State colors used consistently for access requests + friend requests */
+  --color-pending-500: #D9922E;
+  --color-approved-500: #1F9D6C;
+  --color-rejected-500: #D14343;
+  --color-purple-500: #7C5CE0;
+  --color-purple-50: #F1EDFB;
+
+  /* Sidebar stays dark navy even on the light theme, per the reference
+     design - it's a deliberate anchor, not an inconsistency. */
+  --color-navy-900: #000000;
+  --color-navy-800: #171F42;
+  --color-navy-line: #2A3466;
+
+  --font-display: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
+  --radius-card: 14px;
+  --radius-badge: 999px;
+
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.04), 0 1px 12px rgba(0,0,0,0.03);
+  --shadow-card-dark: 0 1px 2px rgba(0,0,0,0.3), 0 4px 20px rgba(0,0,0,0.25);
+}
+
+:root {
+  --bg: var(--color-paper);
+  --bg-surface: var(--color-surface);
+  --text-primary: var(--color-ink-900);
+  --text-secondary: var(--color-ink-500);
+  --border: var(--color-line);
+}
+
+.dark {
+  --bg: var(--color-night-900);
+  --bg-surface: var(--color-night-800);
+  --text-primary: #F4F4F6;
+  --text-secondary: #9A9CA5;
+  --border: var(--color-night-line);
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+::selection {
+  background-color: var(--color-accent-200);
+  color: var(--color-accent-600);
+}
+
+/* Reusable surface treatment - gives cards actual depth instead of just a
+   border sitting flush with the page background. Used for Settings
+   sections, dashboard cards, etc. */
+.card-surface {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
+}
+.dark .card-surface {
+  box-shadow: var(--shadow-card-dark);
+}
+
+/* Button hierarchy - primary carries weight via a soft accent shadow,
+   secondary is a plain ghost/border, destructive is text-only until hover. */
+.btn-primary {
+  background-color: var(--color-accent-500);
+  color: white;
+  box-shadow: 0 1px 2px rgba(76,107,58,0.15), 0 4px 14px rgba(76,107,58,0.22);
+  transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+}
+.btn-primary:hover {
+  background-color: var(--color-accent-600);
+  box-shadow: 0 1px 2px rgba(76,107,58,0.2), 0 6px 18px rgba(76,107,58,0.3);
+}
+.btn-primary:active {
+  transform: scale(0.98);
+}
+.btn-secondary {
+  background-color: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  transition: background-color 0.15s ease;
+}
+.btn-secondary:hover {
+  background-color: var(--bg-surface);
+}
+.btn-destructive {
+  color: var(--color-rejected-500);
+  transition: opacity 0.15s ease;
+}
+.btn-destructive:hover {
+  opacity: 0.75;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
