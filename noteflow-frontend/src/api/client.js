@@ -4,7 +4,7 @@ import { useAuthStore } from '@/store/authStore';
 // Access token lives only in memory (Zustand), never localStorage.
 // Refresh token is an httpOnly cookie the browser sends automatically.
 export const apiClient = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true,
 });
 

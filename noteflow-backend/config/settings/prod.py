@@ -1,8 +1,11 @@
-from decouple import config
+from decouple import Csv, config
 
 from .base import *  # noqa: F401,F403
 
 DEBUG = False
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='', cast=Csv())
 
 DATABASES = {
     'default': {
