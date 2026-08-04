@@ -42,6 +42,8 @@ class AccessRequestViewSet(viewsets.ModelViewSet):
         ar = self.get_object()
         if ar.note.uploader_id != request.user.id:
             return Response({'detail': 'Only the note owner can approve access.'}, status=status.HTTP_403_FORBIDDEN)
+        if ar.status != AccessRequest.Status.PENDING:
+            return Response({'detail': 'This access request has already been resolved.'}, status=status.HTTP_400_BAD_REQUEST)
         ar.status = AccessRequest.Status.APPROVED
         ar.decided_at = timezone.now()
         ar.save(update_fields=['status', 'decided_at'])
@@ -53,6 +55,8 @@ class AccessRequestViewSet(viewsets.ModelViewSet):
         ar = self.get_object()
         if ar.note.uploader_id != request.user.id:
             return Response({'detail': 'Only the note owner can reject access.'}, status=status.HTTP_403_FORBIDDEN)
+        if ar.status != AccessRequest.Status.PENDING:
+            return Response({'detail': 'This access request has already been resolved.'}, status=status.HTTP_400_BAD_REQUEST)
         ar.status = AccessRequest.Status.REJECTED
         ar.decided_at = timezone.now()
         ar.save(update_fields=['status', 'decided_at'])

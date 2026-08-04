@@ -8,7 +8,7 @@ import NotificationItem from '@/components/shared/NotificationItem';
 export default function NotificationsPage() {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['notifications'],
     queryFn: () => listNotifications().then((r) => r.data.results ?? r.data),
   });
@@ -34,6 +34,22 @@ export default function NotificationsPage() {
     await rejectAccessRequest(notification.target_id);
     queryClient.invalidateQueries({ queryKey: ['notifications'] });
   };
+
+  const errorMessage = error?.response?.data?.detail || error?.message || 'Could not load notifications.';
+
+  if (isError) {
+    return (
+      <div className="mx-auto max-w-2xl px-6 py-10">
+        <div className="card-surface rounded-[var(--radius-card)] p-6">
+          <h1 className="font-[var(--font-display)] text-2xl font-bold text-[var(--text-primary)]">Notifications unavailable</h1>
+          <p className="mt-2 text-sm text-[var(--text-secondary)]">{errorMessage}</p>
+          <button onClick={() => refetch()} className="btn-primary mt-4 rounded-full px-4 py-2 text-sm font-medium">
+            Try again
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-2xl px-6 py-10">

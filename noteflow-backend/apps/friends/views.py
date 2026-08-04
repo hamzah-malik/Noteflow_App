@@ -61,6 +61,8 @@ class FriendRequestViewSet(viewsets.ModelViewSet):
         fr = self.get_object()
         if fr.to_user_id != request.user.id:
             return Response({'detail': 'Not your request to accept.'}, status=status.HTTP_403_FORBIDDEN)
+        if fr.status != FriendRequest.Status.PENDING:
+            return Response({'detail': 'This friend request has already been resolved.'}, status=status.HTTP_400_BAD_REQUEST)
         fr.status = FriendRequest.Status.ACCEPTED
         fr.responded_at = timezone.now()
         fr.save(update_fields=['status', 'responded_at'])
@@ -72,6 +74,8 @@ class FriendRequestViewSet(viewsets.ModelViewSet):
         fr = self.get_object()
         if fr.to_user_id != request.user.id:
             return Response({'detail': 'Not your request to reject.'}, status=status.HTTP_403_FORBIDDEN)
+        if fr.status != FriendRequest.Status.PENDING:
+            return Response({'detail': 'This friend request has already been resolved.'}, status=status.HTTP_400_BAD_REQUEST)
         fr.status = FriendRequest.Status.REJECTED
         fr.responded_at = timezone.now()
         fr.save(update_fields=['status', 'responded_at'])
