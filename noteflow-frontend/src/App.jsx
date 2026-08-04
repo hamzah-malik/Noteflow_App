@@ -17,6 +17,8 @@ import FriendsNotesPage from '@/pages/FriendsNotesPage';
 import FriendProfilePage from '@/pages/FriendProfilePage';
 import LoginPage from '@/features/auth/LoginPage';
 import RegisterPage from '@/features/auth/RegisterPage';
+import ForgotPasswordPage from '@/features/auth/ForgotPasswordPage';
+import ResetPasswordPage from '@/features/auth/ResetPasswordPage';
 import UploadPage from '@/features/notes/UploadPage';
 
 const queryClient = new QueryClient();
@@ -31,6 +33,8 @@ export default function App() {
             <Route element={<PublicLayout />}>
               <Route path="/" element={<LandingPage />} />
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route path="/reset-password/:uid/:token" element={<ResetPasswordPage />} />
               <Route path="/register" element={<RegisterPage />} />
             </Route>
 

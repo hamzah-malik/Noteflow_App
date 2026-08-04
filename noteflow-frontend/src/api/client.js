@@ -35,8 +35,8 @@ apiClient.interceptors.response.use(
       originalRequest._retry = true;
       try {
         if (!refreshPromise) {
-          refreshPromise = axios
-            .post('/api/auth/refresh/', {}, { withCredentials: true })
+          refreshPromise = apiClient
+            .post('/auth/refresh/', {})
             .finally(() => { refreshPromise = null; });
         }
         const { data } = await refreshPromise;
