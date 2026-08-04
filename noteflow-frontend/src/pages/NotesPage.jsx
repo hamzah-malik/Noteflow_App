@@ -33,7 +33,7 @@ export default function NotesPage() {
   const { showToast } = useToast();
   const user = useAuthStore((s) => s.user);
 
-  const { data, refetch } = useQuery({
+  const { data, refetch, isError, error, isLoading } = useQuery({
     queryKey: ['notes', search, folderId, uploaderId, visibilityFilter],
     queryFn: () => listNotes({ search, folder: folderId || undefined, uploader: uploaderId || undefined, visibility: visibilityFilter || undefined }).then((r) => r.data.results ?? r.data),
     // Polling is what makes the requester-side "just unlocked" animation
@@ -74,6 +74,22 @@ export default function NotesPage() {
     window.open(data.url, '_blank');
   };
 
+  const errorMessage = error?.response?.data?.detail || error?.message || 'Could not load notes.';
+
+  if (isError) {
+    return (
+      <div className="mx-auto max-w-6xl px-6 py-10">
+        <div className="card-surface rounded-[var(--radius-card)] p-6">
+          <h1 className="font-[var(--font-display)] text-2xl font-bold text-[var(--text-primary)]">Notes unavailable</h1>
+          <p className="mt-2 text-sm text-[var(--text-secondary)]">{errorMessage}</p>
+          <button onClick={() => refetch()} className="btn-primary mt-4 rounded-full px-4 py-2 text-sm font-medium">
+            Try again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto max-w-6xl px-6 py-10">
       <div className="flex items-center justify-between">
@@ -105,17 +121,21 @@ export default function NotesPage() {
       </div>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {data?.map((note) => (
-          <NoteCard
-            key={note.id}
-            note={note}
-            accessState={accessStateFor(note)}
-            justUnlocked={justUnlockedIds.has(note.id)}
-            onOpen={(n) => navigate(`/notes/${n.id}`)}
-            onRequestAccess={setDialogNote}
-            onDownload={handleDownload}
-          />
-        ))}
+        {isLoading ? (
+          <p className="text-sm text-[var(--text-secondary)]">Loading notes...</p>
+        ) : (
+          data?.map((note) => (
+            <NoteCard
+              key={note.id}
+              note={note}
+              accessState={accessStateFor(note)}
+              justUnlocked={justUnlockedIds.has(note.id)}
+              onOpen={(n) => navigate(`/notes/${n.id}`)}
+              onRequestAccess={setDialogNote}
+              onDownload={handleDownload}
+            />
+          ))
+        )}
       </div>
 
       {data?.length === 0 && (
